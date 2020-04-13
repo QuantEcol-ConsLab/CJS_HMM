@@ -1,0 +1,314 @@
+---
+title: "Hidden Markov / Cormack-Jolly-Seber model"
+author: "Mark Sorel"
+date: ' `r Sys.Date()`'
+output:
+  slidy_presentation: default
+  beamer_presentation: default
+  ioslides_presentation: default
+  html_document: default
+  powerpoint_presentation: default
+subtitle: Converse Quantitative Conservation Lab Meeting
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+```
+
+## Sources
+
+Most of the materials for this were taken from [Uncovering ecological state dynamics with hidden
+Markov models (McClintock et al. 2020)](https://arxiv.org/pdf/2002.10497.pdf)
+
+Slides were also taken from Sarah Converse and Beth Gardner's UW SEFS 590 *Advanced Population Analysis in Fish and Wildlife Ecology* course materials 
+
+Zucchini et al. 2016. *Hidden Markov Models for Time Series* was also used.
+
+## Hidden Markov model
+
+- Class of models for sequential data
+  -  Systems evolving over time
+- System modeled using state process
+  - State at time $t$ determined by state at $t-1$ (Markov property) 
+- State process *not* directly observed
+  - Probability distribution of observations at $t$ depends on state at $t$ only (conditional independence property)
+
+## Hidden Markov model
+  
+- Composed of two sequences
+  - an observed state-dependent process $X_1,X_2, . . . ,X_T$;
+  - an unobserved (hidden) state process $S_1, S_2, . . . , S_T$ .\
+  
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/HMM diagram.PNG){#id .class width=95% height=95%}  
+
+## Hidden Markov model
+
+An $N$-state hidden Markov model (HMM) can be specified by 3 components
+
+1. The *initial distribution* $\mathbf {\delta} = (Pr(S_1 = 1), . . . , Pr(S_1 = N)$
+  - probability of being in each state at start 
+
+## Hidden Markov model
+
+An $N$-state hidden Markov model (HMM) can be specified by 3 components
+
+2. The state transition probabilities $\gamma_{i j}=\operatorname{Pr}\left(S_{t+1}=j | S_{t}=i\right)$
+  - probability of switching from state i at time $t$ to state $j$ at time $t+1$
+  - usually represented as a N × N state transition probability
+matrix,
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/HMM general transition matrix.PNG){#id .class width=85% height=85%} 
+
+## Hidden Markov model
+
+An $N$-state hidden Markov model (HMM) can be specified by 3 components
+
+3. The state dependant distributions $p_{i}(x)=\operatorname{Pr}\left(X_{t}=x | S_{t}=i\right)$
+  - probability distribution of an observation $X_t$ conditional on the state at time $t$
+  - A convenient matrix $\mathbf{P}(x)$ is defined as the diagonal matrix with $i$th diagonal element $p_{i}(x)$ because multiplying a row vector of state probabilities by $\mathbf{P}(x)$ and summing gives $\operatorname{Pr}\left(X_{t}=x\right)$ 
+  - The diagonal of $\mathbf{P}(x)$ is just a column of a "traditional" observation matrix. Alternatively, we could do elementwise multiplication with this vector. 
+
+
+
+## Hidden Markov model
+Using matrix notation, the likelihood can be written as 
+
+$$L_{T}=\delta \mathbf{P}\left(x_{1}\right) \boldsymbol{\Gamma} \mathbf{P}\left(x_{2}\right) \boldsymbol{\Gamma} \mathbf{P}\left(x_{3}\right) \cdots \boldsymbol{\Gamma} \mathbf{P}\left(x_{T}\right) \mathbf{1}^{\prime}$$
+
+
+## Cormack-Jolly-Seber Model
+- Two parameters
+  - Probability of surviving and staying in the study area ($\phi$)
+  - Probability of detection given alive and in the study area ($p$)
+  
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS diagram.PNG){#id .class width=95% height=95%}
+
+## 
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS capture history 1.PNG){#id .class width=75% height=75%}
+
+##
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS SS likelihood.PNG){#id .class width=75% height=75%}
+
+## Another depiction of the state space likelihood
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS HMM diagram.PNG){#id .class width=95% height=95%}
+
+## The Cormack-Jolly-Seber is a two-state hidden Markov model with an absorbing "death" state
+
+```{r out.width = '80%'}
+knitr::include_graphics("https://media.giphy.com/media/3o7527pa7qs9kCG78A/giphy.gif") 
+```
+
+## CJS HMM
+
+What is the initial distribution?
+
+## CJS HMM
+
+What is the initial distribution?
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS initial distribution.PNG){#id .class width=40% height=40%}
+
+What is the transition matrix?
+
+## CJS HMM
+
+What is the initial distribution?
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS initial distribution.PNG){#id .class width=40% height=40%}
+
+What is the transition matrix?
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS transition matrix.PNG){#id .class width=60% height=60%}
+
+## CJS HMM
+
+What are the state dependant matrices?
+
+
+## CJS HMM
+
+What are the state dependant matrices?
+
+ "traditional" observation matrix
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS traditional observation matrix.PNG){#id .class width=35% height=35%}
+
+$\mathbf{P}(x)$ with columns of "traditional" observation matrix along diagonals
+
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS observed observation matrix.PNG){#id .class width=40% height=40%}
+![](C:/Users/Mark Sorel/Documents/quant cons lab/lab meetings/HMM OPEN MRR/CJS not observed observation matrix.PNG){#id .class width=43% height=43%}
+
+
+
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+1010
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**1**010
+
+- Start with the initial distribution at time 1 (Capture occasion)
+  - We are conditioning on first capture (known alive at time 1)
+
+  
+$\mathbf{\delta} = [1,0]$
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**10**10
++
+time 2 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right)$
+
+$$\mathbf{\delta} \mathbf{\Gamma} = [1,0] \begin{bmatrix}
+\phi_1 & 1-\phi_1\\
+0 & 1
+\end{bmatrix}= [\phi_1,~ 1-\phi_1]$$
+
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**10**10
+
+time 2 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right)$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} = [1,0] \begin{bmatrix}
+\phi_1 & 1-\phi_1\\
+0 & 1
+\end{bmatrix}= [\phi_1,~ 1-\phi_1]$$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right)=[\phi_1,~ 1-\phi_1] [1-p_1,~ 1]=[\phi_1(1-p_1),~(1-\phi_1)]$$
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**101**0
+
+time 3 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}(x_{1}) \mathbf{\Gamma}=[\phi_1(1-p_1),~(1-\phi_1)]\begin{bmatrix}
+\phi_2 & 1-\phi_2\\
+0 & 1
+\end{bmatrix}= \\
+[\phi_1(1-p_1)\phi_2,~\phi_1(1-p_1)(1-\phi_2)+1-\phi_1] $$
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**101**0
+
+time 3 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}(x_{1}) \mathbf{\Gamma}=[\phi_1(1-p_1),~(1-\phi_1)]\begin{bmatrix}
+\phi_2 & 1-\phi_2\\
+0 & 1
+\end{bmatrix}= \\
+[\phi_1(1-p_1)\phi_2,~\phi_1(1-p_1)(1-\phi_2)+1-\phi_1] $$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}(x_{1}) \mathbf{\Gamma} \mathbf{P}(x_{2}) = [\phi_1(1-p_1)\phi_2,~\phi_1(1-p_1)(1-\phi_2)+1-\phi_1][p_2,~0]=[\phi_1(1-p_1)\phi_2p_2,~0]$$
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**1010**
+
+time 4 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)\mathbf{\Gamma} \mathbf{P}\left(x_{3}\right)$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)\mathbf{\Gamma}=[\phi_1(1-p_1)\phi_2 p_2,~0]\begin{bmatrix}
+\phi_3 & 1-\phi_3\\
+0 & 1
+\end{bmatrix}= \\
+[\phi_1(1-p_1)\phi_2p_2\phi_3,~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)] $$
+
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**010**
+
+time 4 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)\mathbf{\Gamma} \mathbf{P}\left(x_{3}\right)$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)\mathbf{\Gamma}=[\phi_1(1-p_1)\phi_2 p_2,~0]\begin{bmatrix}
+\phi_3 & 1-\phi_3\\
+0 & 1
+\end{bmatrix}= \\
+[\phi_1(1-p_1)\phi_2p_2\phi_3,~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)] $$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}(x_{1}) \mathbf{\Gamma} \mathbf{P}(x_{2})\mathbf{\Gamma} \mathbf{P}(x_{3}) = [\phi_1(1-p_1)\phi_2p_2\phi_3,~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)][1-p_3,1]=\\
+[\phi_1(1-p_1)\phi_2p_2\phi_3(1-p_3),~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)]$$
+
+
+
+## Let's see it in action
+
+Whats the probability of this capture history?
+
+**1010**
+
+time 4 = $\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)\mathbf{\Gamma} \mathbf{P}\left(x_{3}\right)$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}\left(x_{1}\right) \mathbf{\Gamma} \mathbf{P}\left(x_{2}\right)\mathbf{\Gamma}=[\phi_1(1-p_1)\phi_2 p_2,~0]\begin{bmatrix}
+\phi_3 & 1-\phi_3\\
+0 & 1
+\end{bmatrix}= \\
+[\phi_1(1-p_1)\phi_2p_2\phi_3,~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)] $$
+
+
+$$\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}(x_{1}) \mathbf{\Gamma} \mathbf{P}(x_{2})\mathbf{\Gamma} \mathbf{P}(x_{3}) = [\phi_1(1-p_1)\phi_2p_2\phi_3,~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)][1-p_3,1]=\\
+[\phi_1(1-p_1)\phi_2p_2\phi_3(1-p_3),~\phi_1(1-p_1)\phi_2p_2(1-\phi_3)]$$
+
+
+$$\operatorname{Sum}(\mathbf{\delta} \mathbf{\Gamma} \mathbf{P}(x_{1}) \mathbf{\Gamma} \mathbf{P}(x_{2})\mathbf{\Gamma} \mathbf{P}(x_{3})) =\phi_1(1-p_1)\phi_2p_2\phi_3(1-p_3)+\phi_1(1-p_1)\phi_2p_2(1-\phi_3)\\
+= \phi_1(1-p_1)\phi_2p_2\left[\phi_3(1-p_3)+(1-\phi_3)\right]$$
+
+## Whats the big deal?
+
+These can be fit in maximum likelihood (fast)
+
+Lots of packages that already fit MRR models in ML
+
+But ability to code your own enables use in integrated population models and other data integration applications
+
+Can speed up some Bayesian analysis
+
+## Final thoughts
+
+- Lots of other applications of HMMs for MRR, movement data, and more 
+  - see McClintock et al. 2020 for many examples
+ 
+- Numerical computing issues can arise with very small probabilities (underflow)
+  - see algorithem on pg. 49 of Zucchini et al. 2016
+  
+  
+  Go fast
+  ```{r out.width = '25%'}
+knitr::include_graphics("https://media.giphy.com/media/l41lND6Il4hBXyF4A/giphy.gif") 
+```
+
+
+  
